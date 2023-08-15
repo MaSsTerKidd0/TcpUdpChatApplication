@@ -32,21 +32,32 @@ namespace ChatApp
             itemListBox.Items.Add("Contact Example");
             itemListBox.Items.Add("Contact Example");
         }
-
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
                 DragMove();
         }
-
-        private void btnMinimize_Click(object sender, RoutedEventArgs e)
+        private void UserControlNavbar_MinimizeClicked(object sender, EventArgs e)
         {
             WindowState = WindowState.Minimized;
         }
 
-        private void btnExit_Click(object sender, RoutedEventArgs e)
+        private void UserControlNavbar_MaximizeClicked(object sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Maximized)
+            {
+                WindowState = WindowState.Normal;
+            }
+            else
+            {
+                WindowState = WindowState.Maximized;
+            }
+        }
+
+        private void UserControlNavbar_ExitClicked(object sender, EventArgs e)
         {
             Application.Current.Shutdown();
         }
+
     }
 }

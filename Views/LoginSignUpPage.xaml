@@ -3,20 +3,29 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ChatApp.Views"
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks" x:Class="ChatApp.Views.LoginSignUpPage"
+        xmlns:local="clr-namespace:ChatApp.UserControls"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        x:Class="ChatApp.Views.LoginSignUpPage"
         mc:Ignorable="d"
         WindowStyle="None"
         Background="Transparent"
         AllowsTransparency="True"
         ResizeMode="NoResize"
+        MouseDown="Window_MouseDown"
         Title="LoginSignUpPage" Height="450" Width="800">
-    <Border Background="#333333" CornerRadius="20" BorderThickness="5" BorderBrush="White">
+    <Border Background="#BFBCC7" CornerRadius="20" BorderThickness="5" BorderBrush="White">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            <local:NavigationBar Grid.Row="0"
+                MinimizeClicked="UserControlNavbar_MinimizeClicked"
+                MaximizeClicked="UserControlNavbar_MaximizeClicked"
+                ExitClicked="UserControlNavbar_ExitClicked"/>
+            
+            
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="AvailableServer" Width="*"/>
@@ -24,7 +33,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 
-                <Border Grid.Column="1" Background="Crimson" BorderBrush="White" BorderThickness="5" CornerRadius="30" Opacity="0.8">
+                <Border Grid.Column="1" Background="Crimson" BorderBrush="White" BorderThickness="2" Margin="6" CornerRadius="30" Opacity="0.8">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
@@ -36,7 +45,50 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
+
+                        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
+                            <TextBlock Foreground="White" VerticalAlignment="Center">UserName:</TextBlock>
+                            <TextBox Width="150" Height="15" Margin="10"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Center">
+                            <TextBlock Foreground="White" VerticalAlignment="Center">Password:</TextBlock>
+                            <TextBox Width="150" Height="15" Margin="10"/>
+                        </StackPanel>
+                        
+
+
+
+
+
+
+
+
+
+
+
+
                         <TextBlock Text="Login" Foreground="White" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Comic Sans MS" FontWeight="Heavy"/>
+                        <StackPanel Grid.Row="6" Orientation="Vertical">
+                            <Button Style="{StaticResource CustomButtonStyle}" Height="20" Background="LightGreen" FontWeight="ExtraBold" Margin="0,5,0,0"  Width="100">
+                                Login
+                            </Button>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0" HorizontalAlignment="Center">
+                                <TextBlock>Don't have an account?</TextBlock>
+                                <Button Style="{StaticResource CustomButtonStyle}" Width="65">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Signup" HorizontalAlignment="Center" Foreground="RoyalBlue" />
+                                    </StackPanel>
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
                     </Grid>
                 </Border>
                 

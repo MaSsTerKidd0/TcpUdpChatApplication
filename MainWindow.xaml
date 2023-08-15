@@ -3,29 +3,28 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ChatApp"
+        xmlns:local="clr-namespace:ChatApp.UserControls"
         mc:Ignorable="d"
         WindowStyle="None"
         Background="Transparent"
         AllowsTransparency="True"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
+        MouseDown="Window_MouseDown"
         Title="MainWindow" Height="450" Width="800">
-    <Border BorderBrush="Beige" Background="#BFBCC7" CornerRadius="20">
+    <Border BorderBrush="Beige" Background="#BFBCC7" CornerRadius="20" BorderThickness="5">
 
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Text="1.0.0V" FontSize="20" Foreground="Black" Margin="10" FontFamily="Comic Sans MS"/>
-            <TextBlock Text="ChatApplication" FontFamily="Comic Sans MS" Grid.Column="1" FontWeight="ExtraBlack" Foreground="Black" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,8,8,0">
-                <Button x:Name="btnMinimize" Style="{StaticResource MinimizeButtonStyle}" Click="btnMinimize_Click" />
-                <Button x:Name="btnExit" Style="{StaticResource ExitButtonStyle}" Click="btnExit_Click"  Margin="10,0,0,0"/>
-            </StackPanel>
-
-
+            
+            <local:NavigationBar Grid.Row="0"
+                MinimizeClicked="UserControlNavbar_MinimizeClicked"
+                MaximizeClicked="UserControlNavbar_MaximizeClicked"
+                ExitClicked="UserControlNavbar_ExitClicked"/>
+            
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="250"/>
@@ -34,7 +33,7 @@
 
                 <Border  CornerRadius="20" BorderBrush="Transparent">
                     <ScrollViewer Background="Transparent" BorderBrush="Transparent">
-                        <ListBox x:Name="itemListBox" Background="Transparent">
+                        <ListBox x:Name="itemListBox" Background="Transparent" BorderBrush="{x:Null}">
                             <ListBox.ItemContainerStyle>
                                 <Style TargetType="ListBoxItem">
                                     <Setter Property="Margin" Value="10" />
