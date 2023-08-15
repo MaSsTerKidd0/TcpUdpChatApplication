@@ -5,6 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChatApp"
         mc:Ignorable="d"
+        WindowStyle="None"
+        Background="Transparent"
+        AllowsTransparency="True"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
         Title="MainWindow" Height="450" Width="800">
     <Border BorderBrush="Beige" Background="#BFBCC7" CornerRadius="20">
 
@@ -45,7 +50,7 @@
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <Image Height="50" Width="50" Source="pack://application:,,,/ChatApplication;component/assets/Icons/contact.png"
+                                        <Image Height="50" Width="50" Source="pack://application:,,,/ChatApp;component/Assets/Icons/contact.png"
                                         VerticalAlignment="Center"/>
 
                                         <TextBlock  Grid.Column="1" Text = "{Binding}"  FontSize="16" HorizontalAlignment="Center" FontWeight="Medium" VerticalAlignment="Center" Margin="5,0,0,0" Foreground="Black"/>

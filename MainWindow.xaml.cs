@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatApp.Views;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,8 @@ namespace ChatApp
     {
         public MainWindow()
         {
+            LoginSignUpPage signUpPage = new LoginSignUpPage();
+            signUpPage.Show();
             InitializeComponent();
             itemListBox.Items.Add("Contact Example");
             itemListBox.Items.Add("Contact Example");

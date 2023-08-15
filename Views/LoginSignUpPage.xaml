@@ -1,16 +1,46 @@
-﻿<Window x:Class="ChatApplication.Views.LoginSignUpPage"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ChatApplication.Views"
+        xmlns:local="clr-namespace:ChatApp.Views"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks" x:Class="ChatApp.Views.LoginSignUpPage"
         mc:Ignorable="d"
-        AllowsTransparency="True"
-        Background="Transparent"
         WindowStyle="None"
+        Background="Transparent"
+        AllowsTransparency="True"
         ResizeMode="NoResize"
         Title="LoginSignUpPage" Height="450" Width="800">
-    <Border Background="#333333" CornerRadius="20">
-        
+    <Border Background="#333333" CornerRadius="20" BorderThickness="5" BorderBrush="White">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="AvailableServer" Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <Border Grid.Column="1" Background="Crimson" BorderBrush="White" BorderThickness="5" CornerRadius="30" Opacity="0.8">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Login" Foreground="White" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Comic Sans MS" FontWeight="Heavy"/>
+                    </Grid>
+                </Border>
+                
+            </Grid>
+        </Grid>
     </Border>
 </Window>
