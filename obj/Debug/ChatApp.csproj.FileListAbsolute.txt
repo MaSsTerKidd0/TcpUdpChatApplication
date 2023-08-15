@@ -1,0 +1,17 @@
+C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\obj\Debug\ChatApp.csproj.AssemblyReference.cache
+C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\obj\Debug\ChatApp.csproj.SuggestedBindingRedirects.cache
+C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\obj\Debug\MainWindow.g.cs
+C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\obj\Debug\ChatApp_MarkupCompile.cache
+C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\obj\Debug\ChatApp_MarkupCompile.lref
+C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\bin\Debug\ChatApp.exe.config
+C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\bin\Debug\ChatApp.exe
+C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\bin\Debug\ChatApp.pdb
+C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\obj\Debug\App.g.cs
+C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\obj\Debug\App.baml
+C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\obj\Debug\MainWindow.baml
+C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\obj\Debug\ChatApp.g.resources
+C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\obj\Debug\ChatApp.Properties.Resources.resources
+C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\obj\Debug\ChatApp.csproj.GenerateResource.cache
+C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\obj\Debug\ChatApp.csproj.CoreCompileInputs.cache
+C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\obj\Debug\ChatApp.exe
+C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\obj\Debug\ChatApp.pdb
