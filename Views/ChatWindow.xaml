@@ -1,4 +1,4 @@
-﻿<Window x:Class="ChatApp.MainWindow"
+﻿<Window x:Class="ChatApp.Views.ChatWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -11,7 +11,7 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         MouseDown="Window_MouseDown"
-        Title="MainWindow" Height="450" Width="800">
+        Title="ChatWindow" Height="450" Width="800">
     <Border BorderBrush="Beige" Background="#BFBCC7" CornerRadius="20" BorderThickness="5">
 
         <Grid>
@@ -19,12 +19,12 @@
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            
+
             <local:NavigationBar Grid.Row="0"
                 MinimizeClicked="UserControlNavbar_MinimizeClicked"
                 MaximizeClicked="UserControlNavbar_MaximizeClicked"
                 ExitClicked="UserControlNavbar_ExitClicked"/>
-            
+
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="250"/>

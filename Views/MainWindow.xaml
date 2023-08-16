@@ -5,15 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChatApp.UserControls"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-        x:Class="ChatApp.Views.LoginSignUpPage"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks" xmlns:viewmodels="clr-namespace:ChatApp.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
+    x:Class="ChatApp.Views.MainWindow"
         mc:Ignorable="d"
         WindowStyle="None"
         Background="Transparent"
         AllowsTransparency="True"
         ResizeMode="NoResize"
         MouseDown="Window_MouseDown"
-        Title="LoginSignUpPage" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800">
     <Border Background="#BFBCC7" CornerRadius="20" BorderThickness="5" BorderBrush="White">
         <Grid>
             <Grid.RowDefinitions>
@@ -32,12 +32,10 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                
-                <Border Grid.Column="1" Background="Crimson" BorderBrush="White" BorderThickness="2" Margin="6" CornerRadius="30" Opacity="0.8">
+
+                <Border Grid.Column="1" Background="Crimson" BorderBrush="White" BorderThickness="2" Margin="0,0,0,5" CornerRadius="30" >
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
@@ -46,36 +44,24 @@
                         </Grid.RowDefinitions>
 
 
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
+                            <TextBlock FontFamily="Comic Sans MS" Foreground="White" VerticalAlignment="Center">UserName:</TextBlock>
+                            <TextBox Width="150" Height="20" Margin="10" Text ="{Binding UserName}"/>
+                        </StackPanel>
+
                         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
-                            <TextBlock Foreground="White" VerticalAlignment="Center">UserName:</TextBlock>
-                            <TextBox Width="150" Height="15" Margin="10"/>
+                            <TextBlock FontFamily="Comic Sans MS" Foreground="White" VerticalAlignment="Center">Password:</TextBlock>
+                            <TextBox Width="150" Height="20" Margin="10,0,10,0" Text="{Binding Password}"/>
                         </StackPanel>
-
-                        <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Center">
-                            <TextBlock Foreground="White" VerticalAlignment="Center">Password:</TextBlock>
-                            <TextBox Width="150" Height="15" Margin="10"/>
-                        </StackPanel>
-                        
-
-
-
-
-
-
-
-
-
-
-
 
                         <TextBlock Text="Login" Foreground="White" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Comic Sans MS" FontWeight="Heavy"/>
                         <StackPanel Grid.Row="6" Orientation="Vertical">
-                            <Button Style="{StaticResource CustomButtonStyle}" Height="20" Background="LightGreen" FontWeight="ExtraBold" Margin="0,5,0,0"  Width="100">
+                            <Button Style="{StaticResource RegisterButton}" Height="20" FontWeight="ExtraBold" Margin="0,5,0,0"  Width="100" Command="{Binding LoginCommand}">
                                 Login
                             </Button>
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,0" HorizontalAlignment="Center">
                                 <TextBlock>Don't have an account?</TextBlock>
-                                <Button Style="{StaticResource CustomButtonStyle}" Width="65">
+                                <Button Style="{StaticResource CustomButtonStyleNoHoverEffect}" Width="65">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="Signup" HorizontalAlignment="Center" Foreground="RoyalBlue" />
                                     </StackPanel>
@@ -89,10 +75,15 @@
                                 </Button>
                             </StackPanel>
                         </StackPanel>
+                        <ComboBox Grid.Row="3" Width="100" Height="50" HorizontalAlignment="Left" Margin="10" SelectedItem="{Binding SelectedProtocol}">
+                            <ComboBoxItem>Tcp</ComboBoxItem>
+                            <ComboBoxItem>Udp</ComboBoxItem>
+                        </ComboBox>
                     </Grid>
                 </Border>
                 
             </Grid>
+           
         </Grid>
     </Border>
 </Window>

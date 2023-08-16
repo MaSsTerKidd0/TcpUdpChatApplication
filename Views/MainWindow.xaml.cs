@@ -1,24 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ChatApp.ViewModels;
+using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace ChatApp.Views
 {
-    public partial class LoginSignUpPage : Window
+    public partial class MainWindow : Window
     {
-        public LoginSignUpPage()
+        public MainWindow()
         {
             InitializeComponent();
+            MainViewModel mainViewModel = new MainViewModel();
+            DataContext = mainViewModel;
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
