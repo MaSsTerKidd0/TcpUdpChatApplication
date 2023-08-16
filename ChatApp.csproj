@@ -204,6 +204,7 @@
     <Compile Include="UserControls\NavigationBar.xaml.cs">
       <DependentUpon>NavigationBar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Views\ChatWindow.xaml.cs">
       <DependentUpon>ChatWindow.xaml</DependentUpon>
