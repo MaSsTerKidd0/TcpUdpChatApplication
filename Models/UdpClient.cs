@@ -8,6 +8,7 @@ namespace ChatApp.Models
         public UdpClient() : base()
         {
             _sender = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            _localEndPoint.Port = 1690;
         }
 
         protected override void Send(string msg)

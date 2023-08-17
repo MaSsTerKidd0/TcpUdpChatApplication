@@ -33,7 +33,8 @@
 
                 <Border  CornerRadius="20" BorderBrush="Transparent">
                     <ScrollViewer Background="Transparent" BorderBrush="Transparent">
-                        <ListBox x:Name="itemListBox" Background="Transparent" BorderBrush="{x:Null}">
+                        <ListBox x:Name="itemListBox" Background="Transparent" BorderBrush="{x:Null}" ItemsSource="{Binding FilesList}"
+                         SelectedItem="{Binding SelectedFile}">
                             <ListBox.ItemContainerStyle>
                                 <Style TargetType="ListBoxItem">
                                     <Setter Property="Margin" Value="10" />

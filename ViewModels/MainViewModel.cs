@@ -20,13 +20,15 @@ namespace ChatApp.ViewModels
         #endregion
 
         #region Properties
-        public string UserName { set { ClientInfo.Instance.UserName = value; } }
-        public string Password { set { ClientInfo.Instance.Password = value; } }
+        public string UserName { get { return ClientInfo.Instance.UserName; } set { ClientInfo.Instance.UserName = value; } }
+        public string Password { get { return ClientInfo.Instance.Password; } set { ClientInfo.Instance.Password = value; } }
         public ComboBoxItem SelectedProtocol
         {
             get { return _selectedProtocol; }
             set { _selectedProtocol = value; }
         }
+        public List<string> ClientsNames { get; set; }
+        
         #endregion
 
         #region Commands
@@ -49,6 +51,7 @@ namespace ChatApp.ViewModels
         public void ClientLogin()
         {
             Client client = clientTypes[SelectedProtocol.Content.ToString()];
+            client.StartClient();
 
             ChatWindow chatWindow = new ChatWindow();
             Application.Current.MainWindow.Closed += (sender, e) =>
@@ -57,7 +60,6 @@ namespace ChatApp.ViewModels
                 chatWindow.Show();
             };
             Application.Current.MainWindow.Close();
-            client.StartClient();
         }
 
 

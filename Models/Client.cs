@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace ChatApp.Models
@@ -9,15 +10,17 @@ namespace ChatApp.Models
     public abstract class Client
     {
         protected Socket _sender;
-        protected int _port = 11111;
+        protected int _port;
         protected IPAddress _ipAddress;
         protected IPEndPoint _localEndPoint;
         protected const int EXIT = 4;
+        string serverResponse = "";
 
 
         static Dictionary<int, string> reqTypes = new Dictionary<int, string>() {
             { 0, "100#" },
             { 1, "101#" },
+            { 2, "200#" },
             { EXIT, "300#"}
         };
 
@@ -55,18 +58,27 @@ namespace ChatApp.Models
 
         protected virtual void ExecuteClient()
         {
-            int reqChoice;
             string clientRequest = "";
-            string respone;
+            string respone = "";
+
+            Task.Run(async () =>
+            {
+                while (true)
+                {
+                    serverResponse = Receive();
+                    if (serverResponse != "")
+                    {
+                        MessageBox.Show(serverResponse);
+                        serverResponse = "";
+                    }
+                }
+            });
 
             Send(reqTypes[0] + ClientInfo.Instance.UserName);
-            //reqChoice = UserMenu();
-            //clientRequest = reqTypes[reqChoice]
-            //    + (reqFunctions.ContainsKey(reqChoice) ? reqFunctions[reqChoice]() : "");
-            //Send(clientRequest);
-            //respone = Receive();
-            //Console.WriteLine(respone);
+            LoadAvailableClients();
         }
+
+
         //TODO: If Pressed X Button call The Exit function
         protected virtual void CloseConnection()
         {
@@ -84,6 +96,13 @@ namespace ChatApp.Models
             msg = Console.ReadLine();
             return msg;
         }
+
+        private void LoadAvailableClients()
+        {
+            string clientRequest = reqTypes[2];
+            Send(clientRequest);
+        }
+
 
     }
 }
