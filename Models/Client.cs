@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatApp.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -13,22 +14,16 @@ namespace ChatApp.Models
         protected int _port;
         protected IPAddress _ipAddress;
         protected IPEndPoint _localEndPoint;
-        protected const int EXIT = 4;
+        protected const string EXIT = "EXIT";
         string serverResponse = "";
 
-
-        static Dictionary<int, string> reqTypes = new Dictionary<int, string>() {
-            { 0, "100#" },
-            { 1, "101#" },
-            { 2, "200#" },
+        static Dictionary<string, string> reqTypes = new Dictionary<string, string>() {
+            { "Register", "100#" },
+            { "SendBroadCastMessage", "101#" },
+            { "SendPrivateMessage", "102#" },
+            { "ChatRequest", "103#" },
             { EXIT, "300#"}
         };
-
-        static Dictionary<int, Func<String>> reqFunctions = new Dictionary<int, Func<String>>()
-        {
-            { 1, SendBroadCastMsg}
-        };
-
 
         public Client()
         {
@@ -58,29 +53,18 @@ namespace ChatApp.Models
 
         protected virtual void ExecuteClient()
         {
-            string clientRequest = "";
-            string respone = "";
-
-            Task.Run(async () =>
+            Send(reqTypes["Register"] + ClientInfo.Instance.UserName);
+            Task.Run(() =>
             {
                 while (true)
                 {
                     serverResponse = Receive();
-                    if (serverResponse != "")
-                    {
-                        MessageBox.Show(serverResponse);
-                        serverResponse = "";
-                    }
+                    ChatViewModel.HandleServerResponse(serverResponse);
                 }
             });
-
-            Send(reqTypes[0] + ClientInfo.Instance.UserName);
-            LoadAvailableClients();
         }
 
-
-        //TODO: If Pressed X Button call The Exit function
-        protected virtual void CloseConnection()
+        public void CloseConnection()
         {
             _sender.Shutdown(SocketShutdown.Both);
             _sender.Close();
@@ -89,20 +73,23 @@ namespace ChatApp.Models
         protected abstract void Send(string msg);
         protected abstract string Receive();
 
-        private static string SendBroadCastMsg()
+        //private static string SendBroadCastMsg()
+        //{
+        //    string msg;
+        //    Console.WriteLine("Please enter The Msg you want to BroadCast: ");
+        //    msg = Console.ReadLine();
+        //    return msg;
+        //}
+
+
+        //TODO:Change To message object
+        public void SendMessageRequest(string clientToSendName, string msg)
         {
-            string msg;
-            Console.WriteLine("Please enter The Msg you want to BroadCast: ");
-            msg = Console.ReadLine();
-            return msg;
+            string from = ClientInfo.Instance.UserName;
+            string to = clientToSendName;
+
+            string request = reqTypes["SendPrivateMessage"] + from + "#" + to + "#" + msg + "#" + DateTime.Now;
+            Send(request);
         }
-
-        private void LoadAvailableClients()
-        {
-            string clientRequest = reqTypes[2];
-            Send(clientRequest);
-        }
-
-
     }
 }

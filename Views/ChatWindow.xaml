@@ -4,6 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChatApp.UserControls"
+        xmlns:local1="clr-namespace:ChatApp.Models"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:viewmodels="clr-namespace:ChatApp.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewmodels:ChatViewModel}"
         mc:Ignorable="d"
         WindowStyle="None"
         Background="Transparent"
@@ -12,62 +16,110 @@
         WindowStartupLocation="CenterScreen"
         MouseDown="Window_MouseDown"
         Title="ChatWindow" Height="450" Width="800">
+    <Window.Resources>
+        <Style x:Key="ListViewItemStyle" TargetType="ListViewItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListViewItem">
+                        <Border CornerRadius="10" Margin="5,10,0,0" Background="{Binding Background}">
+                            <StackPanel Orientation="Vertical" Margin="10">
+                                <TextBlock Text="{Binding Path=Sender}" FontWeight="ExtraBold" Foreground="{Binding TextColor}"/>
+                                <TextBlock Text="{Binding Path=MessageText}" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Border BorderBrush="Beige" Background="#BFBCC7" CornerRadius="20" BorderThickness="5">
-
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-
             <local:NavigationBar Grid.Row="0"
                 MinimizeClicked="UserControlNavbar_MinimizeClicked"
                 MaximizeClicked="UserControlNavbar_MaximizeClicked"
                 ExitClicked="UserControlNavbar_ExitClicked"/>
-
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="250"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-
-                <Border  CornerRadius="20" BorderBrush="Transparent">
-                    <ScrollViewer Background="Transparent" BorderBrush="Transparent">
-                        <ListBox x:Name="itemListBox" Background="Transparent" BorderBrush="{x:Null}" ItemsSource="{Binding FilesList}"
-                         SelectedItem="{Binding SelectedFile}">
-                            <ListBox.ItemContainerStyle>
-                                <Style TargetType="ListBoxItem">
-                                    <Setter Property="Margin" Value="10" />
-                                    <Setter Property="HorizontalContentAlignment" Value="Left" />
-                                    <Setter Property="VerticalContentAlignment" Value="Center" />
-                                </Style>
-                            </ListBox.ItemContainerStyle>
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <Image Height="50" Width="50" Source="pack://application:,,,/ChatApp;component/Assets/Icons/contact.png"
-                                        VerticalAlignment="Center"/>
-
-                                        <TextBlock  Grid.Column="1" Text = "{Binding}"  FontSize="16" HorizontalAlignment="Center" FontWeight="Medium" VerticalAlignment="Center" Margin="5,0,0,0" Foreground="Black"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </ScrollViewer>
+                <Border CornerRadius="20" BorderBrush="Transparent" Grid.Row="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Button Grid.Row="0" Command="{Binding OpenGroupsWindowCommand}">
+                            Groups
+                        </Button>
+                        <ScrollViewer Background="Transparent" BorderBrush="Transparent" Grid.Row="1">
+                            <ListBox 
+                                x:Name="itemListBox" 
+                                Background="Transparent" 
+                                BorderBrush="{x:Null}" 
+                                ItemsSource="{Binding AvailableClients}"
+                                SelectedItem="{Binding SelectedAvailableClient}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction Command="{Binding LoadChatCommand}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="Margin" Value="10" />
+                                        <Setter Property="HorizontalContentAlignment" Value="Left" />
+                                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Image Height="50" Width="50" Source="pack://application:,,,/ChatApp;component/Assets/Icons/contact.png"
+                                                VerticalAlignment="Center"/>
+                                            <TextBlock  Grid.Column="1" Text="{Binding}" FontSize="16" HorizontalAlignment="Center" FontWeight="Medium" VerticalAlignment="Center" Margin="5,0,0,0" Foreground="Black"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </ScrollViewer>
+                    </Grid>
                 </Border>
-                <Border Background="LightGreen" CornerRadius="20" Grid.Column="2" Margin="8">
-                    <StackPanel Orientation="Vertical" >
-                        <TextBlock x:Name="Messages" Background="Transparent" Opacity="0.6" Height="350"/>
-                        <TextBox x:Name="Sender" Text="Enter Message..."  Height="50" />
-                    </StackPanel>
+                <Border CornerRadius="20" Grid.Column="2" Grid.Row="1" Margin="8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="350"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                            <ListView Background="LightGreen" Height="350" ItemsSource="{Binding Messages}" ItemContainerStyle="{StaticResource ListViewItemStyle}">
+                            </ListView>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+                            <TextBox 
+                                x:Name="Sender" 
+                                Text="{Binding MessageToSend}" 
+                                HorizontalAlignment="Stretch"
+                                Width="491"/>
+                            <Button Command="{Binding SendCommand}" FontWeight="ExtraBlack">
+                                Send
+                            </Button>
+                        </StackPanel>
+                    </Grid>
                 </Border>
             </Grid>
-
         </Grid>
     </Border>
 </Window>

@@ -27,8 +27,7 @@ namespace ChatApp.ViewModels
             get { return _selectedProtocol; }
             set { _selectedProtocol = value; }
         }
-        public List<string> ClientsNames { get; set; }
-        
+
         #endregion
 
         #region Commands
@@ -50,8 +49,8 @@ namespace ChatApp.ViewModels
         #region CommandActions
         public void ClientLogin()
         {
-            Client client = clientTypes[SelectedProtocol.Content.ToString()];
-            client.StartClient();
+            ClientInfo.Instance.Client = clientTypes[SelectedProtocol.Content.ToString()];
+            ClientInfo.Instance.Client.StartClient();
 
             ChatWindow chatWindow = new ChatWindow();
             Application.Current.MainWindow.Closed += (sender, e) =>

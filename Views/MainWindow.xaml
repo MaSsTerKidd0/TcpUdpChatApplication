@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ChatApp.UserControls"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks" xmlns:viewmodels="clr-namespace:ChatApp.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
-    x:Class="ChatApp.Views.MainWindow"
+        x:Class="ChatApp.Views.MainWindow"
         mc:Ignorable="d"
         WindowStyle="None"
         Background="Transparent"

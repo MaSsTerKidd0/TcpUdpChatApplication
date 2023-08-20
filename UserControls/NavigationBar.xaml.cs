@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatApp.Models;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -15,6 +16,12 @@ namespace ChatApp.UserControls
         public NavigationBar()
         {
             InitializeComponent();
+            Application.Current.Exit += CloseClientConnection;
+        }
+
+        private void CloseClientConnection(object sender, ExitEventArgs e)
+        {
+            ClientInfo.Instance.Client.CloseConnection();
         }
 
         private void btnMinimize_Click(object sender, RoutedEventArgs e)

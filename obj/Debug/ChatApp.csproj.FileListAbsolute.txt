@@ -315,3 +315,5 @@ C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\obj\Debug\UserControls\Na
 C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\obj\Debug\Views\ChatWindow.baml
 C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\obj\Debug\Views\MainWindow.baml
 C:\Users\משתמש\Desktop\Limudim\Projectant\ChatApp\obj\Debug\Views\SignupPage.baml
+C:\Users\דניאל\Desktop\Projectant\TcpUdpChatApplication\obj\Debug\Views\AvailableGroups.g.cs
+C:\Users\דניאל\Desktop\Projectant\TcpUdpChatApplication\obj\Debug\Views\AvailableGroups.baml
