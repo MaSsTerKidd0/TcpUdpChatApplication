@@ -16,9 +16,11 @@ namespace ChatApp.ViewModels
         #region Fields
         private ObservableCollection<string> _availableClients;
         ObservableCollection<Message> _messages;
-        private string _selectedAvailableClient;
+        private string _selectedAvailableChat;
         public static Dictionary<string, Action<string>> ResponseDictionary = new Dictionary<string, Action<string>>();
         private string msgToSend;
+        private AvailableGroups availableGroups;
+        private string _chatIcon;
 
         #endregion
 
@@ -27,15 +29,15 @@ namespace ChatApp.ViewModels
         public RelayCommand LoadChatCommand { get; private set; }
         public RelayCommand OpenGroupsWindowCommand { get; private set; }
 
-        public ObservableCollection<string> AvailableClients
+        public ObservableCollection<string> AvailableChats
         {
             get { return _availableClients; }
             set { SetProperty(ref _availableClients, value); }
         }
-        public string SelectedAvailableClient
+        public string SelectedAvailableChat
         {
-            get { return _selectedAvailableClient; }
-            set { SetProperty(ref _selectedAvailableClient, value); }
+            get { return _selectedAvailableChat; }
+            set { SetProperty(ref _selectedAvailableChat, value); }
         }
 
         public string MessageToSend
@@ -47,6 +49,10 @@ namespace ChatApp.ViewModels
         {
             get { return _messages; }
             set { SetProperty(ref _messages, value); }
+        }
+        public string ChatIcon 
+        {
+            set { SetProperty(ref _chatIcon, value); }
         }
         #endregion
 
@@ -64,43 +70,58 @@ namespace ChatApp.ViewModels
             LoadChatCommand = new RelayCommand(ReLoadChat);
             OpenGroupsWindowCommand = new RelayCommand(OpenGroupsWindow);
         }
-
        
         private void initResponseDictionary()
         {
-            ResponseDictionary.Add("500", LoadAvailableClients);
+            ResponseDictionary.Add("500", LoadAvailableChats);
             ResponseDictionary.Add("600", MessageReceived);
+            ResponseDictionary.Add("700", LoadJoinedGroupChat);
+            ResponseDictionary.Add("800", LoadAvailableGroupChats);
         }
 
-        private void SendMessage()
-        {
-            ClientInfo.Instance.Client.SendMessageRequest(SelectedAvailableClient, MessageToSend);
-        }
+
 
         public static void HandleServerResponse(string response)
         {
             string responseType = response.Split('#')[0];
-
             if (ResponseDictionary.ContainsKey(responseType))
             {
                 ResponseDictionary[responseType](response);
             }
             else
             {
-                MessageBox.Show("Wrong Server response");
+                MessageBox.Show("Wrong Server response: " + response);
             }
         }
 
-        private void LoadAvailableClients(string serverResponse)
+        private void LoadAvailableGroupChats(string response)
+        {
+            string[] AvailablesChatsNames = response.Split('#');
+            for (int i = 1; i < AvailablesChatsNames.Length; i++)
+            {
+                string availableChatName = AvailablesChatsNames[i];
+                if (!availableGroups.ViewModel.AvailableGroupChats.Contains(new GroupChat(availableChatName)))
+                {
+                    Application.Current.Dispatcher.Invoke(() => availableGroups.ViewModel.AvailableGroupChats.Add(new GroupChat(availableChatName)));
+                }
+            }
+        }
+
+        private void SendMessage()
+        {
+            ClientInfo.Instance.Client.SendMessageRequest(SelectedAvailableChat, MessageToSend);
+        }
+        private void LoadAvailableChats(string serverResponse)
         {
             string[] connectedAccountsNames = serverResponse.Split('#');
-            for (int i = 1; i < connectedAccountsNames.Length && (connectedAccountsNames.Length - 1) != AvailableClients.Count; i++)
+            for (int i = 1; i < connectedAccountsNames.Length && (connectedAccountsNames.Length - 1) != AvailableChats.Count; i++)
             {
-                if (ClientInfo.Instance.UserName != connectedAccountsNames[i] && !AvailableClients.Contains(connectedAccountsNames[i]))
+                if (ClientInfo.Instance.UserName != connectedAccountsNames[i] && !AvailableChats.Contains(connectedAccountsNames[i]))
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        AvailableClients.Add(connectedAccountsNames[i]);
+                        AvailableChats.Add(connectedAccountsNames[i]);
+                        ChatIcon = "pack://application:,,,//ChatApp;component//Assets//Icons//contact.png";
                     });
                 }
             }
@@ -144,10 +165,28 @@ namespace ChatApp.ViewModels
 
             return orderedMessages;
         }
+
+        public void LoadJoinedGroupChat(string response)
+        {
+            string[] chatsNames = response.Split('#');
+
+            for (int i = 1; i < chatsNames.Length && (chatsNames.Length - 1) != AvailableChats.Count; i++)
+            {
+                if (!(AvailableChats.Contains(chatsNames[i])))
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        AvailableChats.Add(chatsNames[i]);
+                        ChatIcon = "pack://application:,,,//ChatApp;component//Assets//Icons//GroupIcon.png";
+                    });
+                }
+            }
+        }
+
         private void ReLoadChat()
         {
-            if (SelectedAvailableClient != null && ClientInfo.Instance.ClientChats.ContainsKey(SelectedAvailableClient))
-                Messages = ClientInfo.Instance.ClientChats[SelectedAvailableClient].Messages;
+            if (SelectedAvailableChat != null && ClientInfo.Instance.ClientChats.ContainsKey(SelectedAvailableChat))
+                Messages = ClientInfo.Instance.ClientChats[SelectedAvailableChat].Messages;
         }
 
         private void CreateChat(string clientName)
@@ -159,7 +198,7 @@ namespace ChatApp.ViewModels
         }
         private void OpenGroupsWindow()
         {
-            AvailableGroups availableGroups = new AvailableGroups();
+            availableGroups = new AvailableGroups();
             availableGroups.Show();
         }
 

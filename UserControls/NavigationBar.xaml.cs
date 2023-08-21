@@ -16,14 +16,7 @@ namespace ChatApp.UserControls
         public NavigationBar()
         {
             InitializeComponent();
-            Application.Current.Exit += CloseClientConnection;
         }
-
-        private void CloseClientConnection(object sender, ExitEventArgs e)
-        {
-            ClientInfo.Instance.Client.CloseConnection();
-        }
-
         private void btnMinimize_Click(object sender, RoutedEventArgs e)
         {
             MinimizeClicked?.Invoke(this, EventArgs.Empty);

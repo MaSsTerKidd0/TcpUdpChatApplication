@@ -39,8 +39,8 @@ namespace ChatApp.Views
 
         private void UserControlNavbar_ExitClicked(object sender, EventArgs e)
         {
+            ClientInfo.Instance.Client.SendCloseConnectionRequest();
             Application.Current.Shutdown();
-            
         }
     }
 }

@@ -22,6 +22,8 @@ namespace ChatApp.Models
             { "SendBroadCastMessage", "101#" },
             { "SendPrivateMessage", "102#" },
             { "ChatRequest", "103#" },
+            { "CreateGroupChat", "200#" },
+            { "JoinGroupChat", "201#" },
             { EXIT, "300#"}
         };
 
@@ -64,7 +66,14 @@ namespace ChatApp.Models
             });
         }
 
-        public void CloseConnection()
+        public void SendCloseConnectionRequest()
+        {
+            string closeConnection = reqTypes[EXIT];
+            Send(closeConnection);
+            CloseConnection();
+        }
+
+        private void CloseConnection()
         {
             _sender.Shutdown(SocketShutdown.Both);
             _sender.Close();
@@ -73,22 +82,22 @@ namespace ChatApp.Models
         protected abstract void Send(string msg);
         protected abstract string Receive();
 
-        //private static string SendBroadCastMsg()
-        //{
-        //    string msg;
-        //    Console.WriteLine("Please enter The Msg you want to BroadCast: ");
-        //    msg = Console.ReadLine();
-        //    return msg;
-        //}
-
-
-        //TODO:Change To message object
         public void SendMessageRequest(string clientToSendName, string msg)
         {
             string from = ClientInfo.Instance.UserName;
             string to = clientToSendName;
 
             string request = reqTypes["SendPrivateMessage"] + from + "#" + to + "#" + msg + "#" + DateTime.Now;
+            Send(request);
+        }
+        public void SendJoinGroupRequest(string groupName)
+        {
+            string request = reqTypes["JoinGroupChat"] + groupName;
+            Send(request);
+        }
+        public void SendCreateGroupRequest(string groupName)
+        {
+            string request = reqTypes["CreateGroupChat"] + groupName;
             Send(request);
         }
     }

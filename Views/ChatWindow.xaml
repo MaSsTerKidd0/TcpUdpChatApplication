@@ -61,8 +61,8 @@
                                 x:Name="itemListBox" 
                                 Background="Transparent" 
                                 BorderBrush="{x:Null}" 
-                                ItemsSource="{Binding AvailableClients}"
-                                SelectedItem="{Binding SelectedAvailableClient}">
+                                ItemsSource="{Binding AvailableChats}"
+                                SelectedItem="{Binding SelectedAvailableChat}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
                                         <i:InvokeCommandAction Command="{Binding LoadChatCommand}" />
@@ -82,7 +82,7 @@
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
-                                            <Image Height="50" Width="50" Source="pack://application:,,,/ChatApp;component/Assets/Icons/contact.png"
+                                            <Image Height="50" Width="50" Source="{Binding Path=ChatIcon}"
                                                 VerticalAlignment="Center"/>
                                             <TextBlock  Grid.Column="1" Text="{Binding}" FontSize="16" HorizontalAlignment="Center" FontWeight="Medium" VerticalAlignment="Center" Margin="5,0,0,0" Foreground="Black"/>
                                         </Grid>

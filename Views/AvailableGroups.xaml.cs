@@ -17,9 +17,14 @@ namespace ChatApp.Views
 {
     public partial class AvailableGroups : Window
     {
+        private GroupsWindowViewModel viewModel;
+        public GroupsWindowViewModel ViewModel 
+        {
+            get { return viewModel; }
+        }
         public AvailableGroups()
         {
-            GroupsWindowViewModel viewModel = new GroupsWindowViewModel();  
+            viewModel = new GroupsWindowViewModel();  
             InitializeComponent();
             DataContext = viewModel;
         }
