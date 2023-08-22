@@ -97,7 +97,7 @@ namespace ChatApp.Models
         }
         public void SendCreateGroupRequest(string groupName)
         {
-            string request = reqTypes["CreateGroupChat"] + groupName;
+            string request = reqTypes["CreateGroupChat"] + "Group:" + groupName;
             Send(request);
         }
     }

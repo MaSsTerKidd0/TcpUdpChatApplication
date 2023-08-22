@@ -10,6 +10,7 @@ namespace ChatApp.Models
     {
         private string _chatName;
         private static int _inChatClientAmount;
+        private string _chatIcon;
 
         public string GroupName
         {

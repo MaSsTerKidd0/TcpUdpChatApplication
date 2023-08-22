@@ -118,7 +118,7 @@
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
-                                            <Image Height="50" Width="50" Source="{Binding Path=ChatIcon}"
+                                            <Image Height="50" Width="50" Source="pack://application:,,,/ChatApp;component/Assets/Icons/GroupIcon.png"
                                             VerticalAlignment="Center"/>
                                             <TextBlock  Grid.Column="1" Text="{Binding GroupName}" FontSize="16" HorizontalAlignment="Center" FontWeight="Medium" VerticalAlignment="Center" Margin="5,0,0,0" Foreground="Black"/>
                                             
