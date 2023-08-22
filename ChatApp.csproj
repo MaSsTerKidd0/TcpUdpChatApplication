@@ -208,11 +208,7 @@
       <DependentUpon>NavigationBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\ChatViewModel.cs" />
-    <Compile Include="ViewModels\GroupsWindowViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="Views\AvailableGroups.xaml.cs">
-      <DependentUpon>AvailableGroups.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\ChatWindow.xaml.cs">
       <DependentUpon>ChatWindow.xaml</DependentUpon>
     </Compile>
@@ -227,10 +223,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="UserControls\NavigationBar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\AvailableGroups.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

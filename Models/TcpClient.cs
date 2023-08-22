@@ -15,7 +15,6 @@ namespace ChatApp.Models
         {
             byte[] lengthBytes = BitConverter.GetBytes(msg.Length);
             byte[] messageBytes = Encoding.ASCII.GetBytes(msg);
-
             _sender.Send(lengthBytes);
             _sender.Send(messageBytes);
         }

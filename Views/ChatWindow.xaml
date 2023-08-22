@@ -47,21 +47,24 @@
                     <ColumnDefinition Width="250"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Border CornerRadius="20" BorderBrush="Transparent" Grid.Row="1">
+                <Border CornerRadius="20" BorderBrush="Transparent" Grid.Row="1" Margin="5,10,0,10">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="25"/>
+                            <RowDefinition Height="25"/>
                             <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="25"/>
                         </Grid.RowDefinitions>
-                        <Button Grid.Row="0" Command="{Binding OpenGroupsWindowCommand}">
-                            Groups
+                        <TextBox Text="{Binding NewGroupChatName}"/>
+                        <Button Grid.Row="1" Command="{Binding CreateGroupChatCommand}">
+                            Create Group
                         </Button>
-                        <ScrollViewer Background="Transparent" BorderBrush="Transparent" Grid.Row="1">
+                        <ScrollViewer Background="Transparent" BorderBrush="Transparent" Grid.Row="2">
                             <ListBox 
-                                x:Name="itemListBox" 
                                 Background="Transparent" 
                                 BorderBrush="{x:Null}" 
-                                ItemsSource="{Binding AvailableChats}"
+                                ItemsSource="{Binding AvailableChats}" 
                                 SelectedItem="{Binding SelectedAvailableChat}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
@@ -84,12 +87,49 @@
                                             </Grid.ColumnDefinitions>
                                             <Image Height="50" Width="50" Source="{Binding Path=ChatIcon}"
                                                 VerticalAlignment="Center"/>
-                                            <TextBlock  Grid.Column="1" Text="{Binding}" FontSize="16" HorizontalAlignment="Center" FontWeight="Medium" VerticalAlignment="Center" Margin="5,0,0,0" Foreground="Black"/>
+                                            <TextBlock  Grid.Column="1" Text="{Binding }" FontSize="16" HorizontalAlignment="Center" FontWeight="Medium" VerticalAlignment="Center" Margin="5,0,0,0" Foreground="Black"/>
                                         </Grid>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
                         </ScrollViewer>
+                        <ScrollViewer Background="Transparent" BorderBrush="Transparent" Grid.Row="3">
+                            <ListBox 
+                            Background="Transparent" 
+                            BorderBrush="{x:Null}" 
+                            ItemsSource="{Binding AvailableGroupChats}"
+                            SelectedItem="{Binding SelectedGroupChat}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction Command="{Binding LoadChatCommand}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="Margin" Value="10" />
+                                        <Setter Property="HorizontalContentAlignment" Value="Left" />
+                                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Image Height="50" Width="50" Source="{Binding Path=ChatIcon}"
+                                            VerticalAlignment="Center"/>
+                                            <TextBlock  Grid.Column="1" Text="{Binding GroupName}" FontSize="16" HorizontalAlignment="Center" FontWeight="Medium" VerticalAlignment="Center" Margin="5,0,0,0" Foreground="Black"/>
+                                            
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </ScrollViewer>
+                        <Button Command="{Binding JoinGroupChatCommand}" Grid.Row="4">
+                            Join
+                        </Button>
                     </Grid>
                 </Border>
                 <Border CornerRadius="20" Grid.Column="2" Grid.Row="1" Margin="8">

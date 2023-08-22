@@ -1,5 +1,4 @@
 ﻿using ChatApp.Models;
-using ChatApp.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -19,15 +18,17 @@ namespace ChatApp.ViewModels
         private string _selectedAvailableChat;
         public static Dictionary<string, Action<string>> ResponseDictionary = new Dictionary<string, Action<string>>();
         private string msgToSend;
-        private AvailableGroups availableGroups;
         private string _chatIcon;
-
+        private string _newGroupChatName;
+        private GroupChat _selectedGroupChat;
+        private ObservableCollection<GroupChat> _availableGroupChats;
         #endregion
 
         #region Properties
         public RelayCommand SendCommand { get; private set; }
         public RelayCommand LoadChatCommand { get; private set; }
-        public RelayCommand OpenGroupsWindowCommand { get; private set; }
+        public RelayCommand JoinGroupChatCommand { get; private set; }
+        public RelayCommand CreateGroupChatCommand { get; private set; }
 
         public ObservableCollection<string> AvailableChats
         {
@@ -50,9 +51,24 @@ namespace ChatApp.ViewModels
             get { return _messages; }
             set { SetProperty(ref _messages, value); }
         }
-        public string ChatIcon 
+        public string ChatIcon
         {
             set { SetProperty(ref _chatIcon, value); }
+        }
+        public string NewGroupChatName
+        {
+            get { return _newGroupChatName; }
+            set { SetProperty(ref _newGroupChatName, value); }
+        }
+        public GroupChat SelectedGroupChat
+        {
+            get { return _selectedGroupChat; }
+            set { SetProperty(ref _selectedGroupChat, value); }
+        }
+        public ObservableCollection<GroupChat> AvailableGroupChats
+        {
+            get { return _availableGroupChats; }
+            set { SetProperty(ref _availableGroupChats, value); }
         }
         #endregion
 
@@ -68,9 +84,11 @@ namespace ChatApp.ViewModels
         {
             SendCommand = new RelayCommand(SendMessage);
             LoadChatCommand = new RelayCommand(ReLoadChat);
-            OpenGroupsWindowCommand = new RelayCommand(OpenGroupsWindow);
+            JoinGroupChatCommand = new RelayCommand(JoinGroupChat);
+            CreateGroupChatCommand = new RelayCommand(CreateGroupChat);
+            AvailableGroupChats = new ObservableCollection<GroupChat>();
         }
-       
+
         private void initResponseDictionary()
         {
             ResponseDictionary.Add("500", LoadAvailableChats);
@@ -80,10 +98,10 @@ namespace ChatApp.ViewModels
         }
 
 
-
         public static void HandleServerResponse(string response)
         {
             string responseType = response.Split('#')[0];
+
             if (ResponseDictionary.ContainsKey(responseType))
             {
                 ResponseDictionary[responseType](response);
@@ -100,9 +118,12 @@ namespace ChatApp.ViewModels
             for (int i = 1; i < AvailablesChatsNames.Length; i++)
             {
                 string availableChatName = AvailablesChatsNames[i];
-                if (!availableGroups.ViewModel.AvailableGroupChats.Contains(new GroupChat(availableChatName)))
+                if (!string.IsNullOrEmpty(availableChatName) &&
+                    AvailableGroupChats.All(chat => chat.GroupName != availableChatName))
                 {
-                    Application.Current.Dispatcher.Invoke(() => availableGroups.ViewModel.AvailableGroupChats.Add(new GroupChat(availableChatName)));
+                    ChatIcon = "pack://application:,,,//ChatApp;component//Assets//Icons//GroupIcon.png";
+                    Application.Current.Dispatcher.Invoke(() =>
+                        AvailableGroupChats.Add(new GroupChat("Group:" + availableChatName)));
                 }
             }
         }
@@ -120,8 +141,8 @@ namespace ChatApp.ViewModels
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        AvailableChats.Add(connectedAccountsNames[i]);
                         ChatIcon = "pack://application:,,,//ChatApp;component//Assets//Icons//contact.png";
+                        AvailableChats.Add(connectedAccountsNames[i]);
                     });
                 }
             }
@@ -145,11 +166,12 @@ namespace ChatApp.ViewModels
                 TextColor = (from == ClientInfo.Instance.UserName ? Colors.Crimson.ToString() : Colors.Black.ToString()),
                 Time = dateTimeString
             };
+
             Application.Current.Dispatcher.Invoke(() =>
             {
                 ClientInfo.Instance.ClientChats[from].Messages.Add(newMessage);
                 ClientInfo.Instance.ClientChats[to].Messages.Add(newMessage);
-                Messages = new ObservableCollection<Message>(OrderMessagesByTime(to, from)); 
+                Messages = new ObservableCollection<Message>(OrderMessagesByTime(to, from));
                 ReLoadChat();
             });
         }
@@ -176,8 +198,8 @@ namespace ChatApp.ViewModels
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        AvailableChats.Add(chatsNames[i]);
                         ChatIcon = "pack://application:,,,//ChatApp;component//Assets//Icons//GroupIcon.png";
+                        AvailableChats.Add(chatsNames[i]);
                     });
                 }
             }
@@ -196,11 +218,15 @@ namespace ChatApp.ViewModels
                 ClientInfo.Instance.ClientChats.Add(clientName, new Chat());
             }
         }
-        private void OpenGroupsWindow()
+        public void CreateGroupChat()
         {
-            availableGroups = new AvailableGroups();
-            availableGroups.Show();
+            ClientInfo.Instance.Client.SendCreateGroupRequest(NewGroupChatName);
         }
 
+        private void JoinGroupChat()
+        {
+            ClientInfo.Instance.Client.SendJoinGroupRequest(SelectedGroupChat.GroupName.Split(':')[1]);
+            Application.Current.Dispatcher.Invoke(() => AvailableGroupChats.Remove(SelectedGroupChat));
+        }
     }
 }
