@@ -19,7 +19,6 @@ namespace ChatApp.Models
 
         static Dictionary<string, string> reqTypes = new Dictionary<string, string>() {
             { "Register", "100#" },
-            { "SendBroadCastMessage", "101#" },
             { "SendPrivateMessage", "102#" },
             { "ChatRequest", "103#" },
             { "CreateGroupChat", "200#" },
@@ -56,6 +55,7 @@ namespace ChatApp.Models
         protected virtual void ExecuteClient()
         {
             Send(reqTypes["Register"] + ClientInfo.Instance.UserName);
+            //TODON: ADD cancelation token for this task on log out cancel Task...
             Task.Run(() =>
             {
                 while (true)
