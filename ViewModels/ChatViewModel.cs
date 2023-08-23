@@ -95,15 +95,12 @@ namespace ChatApp.ViewModels
 
         public static void HandleServerResponse(string response)
         {
-            int responseType = int.Parse(response.Split('#')[0]);
+            int responseType;
+            int.TryParse(response.Split('#')[0], out responseType);
 
             if (ResponseDictionary.ContainsKey(responseType))
             {
                 ResponseDictionary[responseType](response);
-            }
-            else
-            {
-                MessageBox.Show("Wrong Server response: " + response);
             }
         }
 
@@ -135,7 +132,6 @@ namespace ChatApp.ViewModels
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        
                         AvailableChats.Add(connectedAccountsNames[i]);
                     });
                 }
@@ -192,7 +188,7 @@ namespace ChatApp.ViewModels
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        
+
                         AvailableChats.Add(chatsNames[i]);
                     });
                 }
@@ -201,8 +197,14 @@ namespace ChatApp.ViewModels
 
         private void ReLoadChat()
         {
+
             if (SelectedAvailableChat != null && ClientInfo.Instance.ClientChats.ContainsKey(SelectedAvailableChat))
+            {
+                if (ClientInfo.Instance.ClientChats[SelectedAvailableChat].Messages.Count == 0)
+                    Messages = new ObservableCollection<Message>();
                 Messages = ClientInfo.Instance.ClientChats[SelectedAvailableChat].Messages;
+            }
+
         }
 
         private void CreateChat(string clientName)
@@ -221,6 +223,12 @@ namespace ChatApp.ViewModels
         {
             ClientInfo.Instance.Client.SendJoinGroupRequest(SelectedGroupChat.GroupName);
             Application.Current.Dispatcher.Invoke(() => AvailableGroupChats.Remove(SelectedGroupChat));
+        }
+
+        public void ExitServer() 
+        {
+            ClientInfo.Instance.Client.SendCloseConnectionRequest();
+            ClientInfo.Instance.Client.CancelRecieveTask();
         }
     }
 }

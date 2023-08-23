@@ -274,7 +274,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\Images\" />
-    <Folder Include="PacketBuilder\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Icons\GroupIcon.png">

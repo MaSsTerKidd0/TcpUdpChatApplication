@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -16,6 +17,7 @@ namespace ChatApp.Models
         protected IPEndPoint _localEndPoint;
         protected const string EXIT = "EXIT";
         string serverResponse = "";
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
         static Dictionary<string, string> reqTypes = new Dictionary<string, string>() {
             { "Register", "100#" },
@@ -55,7 +57,6 @@ namespace ChatApp.Models
         protected virtual void ExecuteClient()
         {
             Send(reqTypes["Register"] + ClientInfo.Instance.UserName);
-            //TODON: ADD cancelation token for this task on log out cancel Task...
             Task.Run(() =>
             {
                 while (true)
@@ -63,13 +64,14 @@ namespace ChatApp.Models
                     serverResponse = Receive();
                     ChatViewModel.HandleServerResponse(serverResponse);
                 }
-            });
+            }, _cancellationTokenSource.Token);
         }
 
         public void SendCloseConnectionRequest()
         {
             string closeConnection = reqTypes[EXIT];
             Send(closeConnection);
+            Thread.Sleep(1000);
             CloseConnection();
         }
 
@@ -87,7 +89,7 @@ namespace ChatApp.Models
             string from = ClientInfo.Instance.UserName;
             string to = clientToSendName;
 
-            string request = reqTypes["SendPrivateMessage"] + from + "#" + to + "#" + msg + "#" + DateTime.Now;
+            string request = reqTypes["SendPrivateMessage"] + from + "#" + to + "#" + DateTime.Now + "#" + msg;
             Send(request);
         }
         public void SendJoinGroupRequest(string groupName)
@@ -99,6 +101,10 @@ namespace ChatApp.Models
         {
             string request = reqTypes["CreateGroupChat"] + "Group:" + groupName;
             Send(request);
+        }
+        public void CancelRecieveTask()
+        {
+            _cancellationTokenSource.Cancel();
         }
     }
 }

@@ -8,9 +8,10 @@ namespace ChatApp.Views
 {
     public partial class ChatWindow : Window
     {
+        ChatViewModel chatViewModel;
         public ChatWindow()
         {
-            ChatViewModel chatViewModel = new ChatViewModel();
+            chatViewModel = new ChatViewModel();
             DataContext = chatViewModel;
             InitializeComponent();
 
@@ -39,7 +40,7 @@ namespace ChatApp.Views
 
         private void UserControlNavbar_ExitClicked(object sender, EventArgs e)
         {
-            ClientInfo.Instance.Client.SendCloseConnectionRequest();
+            chatViewModel.ExitServer();
             Application.Current.Shutdown();
         }
     }

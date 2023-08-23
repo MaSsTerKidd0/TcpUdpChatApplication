@@ -21,7 +21,9 @@ namespace ChatApp.Models
         protected override string Receive()
         {
             byte[] messageReceived = new byte[1024];
-            int byteRecv = _sender.Receive(messageReceived, 0, messageReceived.Length, SocketFlags.None);
+            int byteRecv = 0;
+            if(_sender.Connected == true)
+                byteRecv = _sender.Receive(messageReceived, 0, messageReceived.Length, SocketFlags.None);
             return Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
         }
     }
