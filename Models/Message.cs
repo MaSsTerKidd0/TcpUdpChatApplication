@@ -1,6 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System;
-using Xceed.Wpf.Toolkit;
 
 namespace ChatApp.Models
 {
@@ -33,7 +31,7 @@ namespace ChatApp.Models
             get => _textColor;
             set => SetProperty(ref _textColor, value);
         }
-        public string Time 
+        public string Time
         {
             get => _time;
             set { _time = value; }

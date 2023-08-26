@@ -1,4 +1,6 @@
-﻿using ChatApp.Models;
+﻿using ChatApp.Enums;
+using ChatApp.Models;
+using ChatApp.ResponseCommand;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -20,7 +22,7 @@ namespace ChatApp.ViewModels
         private string msgToSend;
         private string _newGroupChatName;
         private GroupChat _selectedGroupChat;
-        private ObservableCollection<GroupChat> _availableGroupChats;
+        private static ObservableCollection<GroupChat> _availableGroupChats;
         #endregion
 
         #region Properties
@@ -65,14 +67,21 @@ namespace ChatApp.ViewModels
             get { return _availableGroupChats; }
             set { SetProperty(ref _availableGroupChats, value); }
         }
+
         #endregion
 
+        #region Init
         public ChatViewModel()
+        {
+            initVariables();
+            initCommands();
+            initResponseDictionary();
+        }
+
+        private void initVariables()
         {
             _availableClients = new ObservableCollection<string>();
             _messages = new ObservableCollection<Message>();
-            initCommands();
-            initResponseDictionary();
         }
 
         private void initCommands()
@@ -86,12 +95,12 @@ namespace ChatApp.ViewModels
 
         private void initResponseDictionary()
         {
-            ResponseDictionary.Add(500, LoadAvailableChats);
-            ResponseDictionary.Add(600, MessageReceived);
-            ResponseDictionary.Add(700, LoadJoinedGroupChat);
-            ResponseDictionary.Add(800, LoadAvailableGroupChats);
+            ResponseDictionary.Add((int)ResponsesEnum.LoadAvailableChats, LoadAvailableChats);
+            ResponseDictionary.Add((int)ResponsesEnum.MessageReceived, MessageReceived);
+            ResponseDictionary.Add((int)ResponsesEnum.LoadJoinedGroupChat, LoadJoinedGroupChat);
+            ResponseDictionary.Add((int)ResponsesEnum.LoadAvailableGroupChats, LoadAvailableGroupChats);
         }
-
+        #endregion
 
         public static void HandleServerResponse(string response)
         {
@@ -100,23 +109,31 @@ namespace ChatApp.ViewModels
 
             if (ResponseDictionary.ContainsKey(responseType))
             {
-                ResponseDictionary[responseType](response);
+
+               ResponseDictionary[responseType](response);
             }
         }
 
+        //public static void SetAvailableGroupChats() 
+        //{
+        //    AvailableGroupChats = _availableGroupChats;
+        //}
         private void LoadAvailableGroupChats(string response)
         {
+            ICommand loadChat;
+            loadChat = new LoadAvailableGroupChatsCommand(response);
+            loadChat.Execute(new ObservableCollection<InterfaceExample>(AvailableGroupChats));
             string[] AvailablesChatsNames = response.Split('#');
-            for (int i = 1; i < AvailablesChatsNames.Length; i++)
-            {
-                string availableChatName = AvailablesChatsNames[i];
-                if (!string.IsNullOrEmpty(availableChatName) &&
-                    AvailableGroupChats.All(chat => chat.GroupName != availableChatName))
-                {
-                    Application.Current.Dispatcher.Invoke(() =>
-                        AvailableGroupChats.Add(new GroupChat(availableChatName)));
-                }
-            }
+            //for (int i = 1; i < AvailablesChatsNames.Length; i++)
+            //{
+            //    string availableChatName = AvailablesChatsNames[i];
+            //    if (!string.IsNullOrEmpty(availableChatName) &&
+            //        AvailableGroupChats.All(chat => chat.GroupName != availableChatName))
+            //    {
+            //        Application.Current.Dispatcher.Invoke(() =>
+            //            AvailableGroupChats.Add(new GroupChat(availableChatName)));
+            //    }
+            //}
         }
 
         private void SendMessage()
@@ -188,7 +205,6 @@ namespace ChatApp.ViewModels
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-
                         AvailableChats.Add(chatsNames[i]);
                     });
                 }
@@ -200,8 +216,6 @@ namespace ChatApp.ViewModels
 
             if (SelectedAvailableChat != null && ClientInfo.Instance.ClientChats.ContainsKey(SelectedAvailableChat))
             {
-                if (ClientInfo.Instance.ClientChats[SelectedAvailableChat].Messages.Count == 0)
-                    Messages = new ObservableCollection<Message>();
                 Messages = ClientInfo.Instance.ClientChats[SelectedAvailableChat].Messages;
             }
 
@@ -225,7 +239,7 @@ namespace ChatApp.ViewModels
             Application.Current.Dispatcher.Invoke(() => AvailableGroupChats.Remove(SelectedGroupChat));
         }
 
-        public void ExitServer() 
+        public void ExitServer()
         {
             ClientInfo.Instance.Client.SendCloseConnectionRequest();
             ClientInfo.Instance.Client.CancelRecieveTask();

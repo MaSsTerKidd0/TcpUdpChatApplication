@@ -1,5 +1,4 @@
-﻿using ChatApp.Models;
-using ChatApp.ViewModels;
+﻿using ChatApp.ViewModels;
 using System;
 using System.Windows;
 using System.Windows.Input;

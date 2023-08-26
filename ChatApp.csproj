@@ -200,10 +200,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Enums\ResponsesEnum.cs" />
     <Compile Include="Models\Chat.cs" />
     <Compile Include="Models\ClientInfo.cs" />
     <Compile Include="Models\GroupChat.cs" />
+    <Compile Include="Models\InterfaceExample.cs" />
     <Compile Include="Models\Message.cs" />
+    <Compile Include="RequestsBuilder\IRequestBuilder.cs" />
+    <Compile Include="ResponseCommand\ICommand.cs" />
+    <Compile Include="ResponseCommand\LoadAvailableGroupChatsCommand.cs" />
     <Compile Include="UserControls\NavigationBar.xaml.cs">
       <DependentUpon>NavigationBar.xaml</DependentUpon>
     </Compile>

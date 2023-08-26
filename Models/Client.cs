@@ -71,7 +71,6 @@ namespace ChatApp.Models
         {
             string closeConnection = reqTypes[EXIT];
             Send(closeConnection);
-            Thread.Sleep(1000);
             CloseConnection();
         }
 

@@ -13,9 +13,6 @@ namespace ChatApp.Models
         public Client Client { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
-        public int Age { get; set; }
-        public bool Sex { get; set; }
-        public string BirthDate { get; set; }
         public Dictionary<string, Chat> ClientChats { get { return _clientChats; } }
         #endregion
 
@@ -39,9 +36,6 @@ namespace ChatApp.Models
         {
             UserName = userName;
             Password = password;
-            Age = age;
-            Sex = sex;
-            BirthDate = birthDate;
         }
     }
 }
