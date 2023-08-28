@@ -1,37 +1,30 @@
 ﻿using ChatApp.Models;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace ChatApp.ResponseCommand
 {
-    public class LoadAvailableGroupChatsCommand : ICommand
+    public class LoadAvailableGroupChatsCommand : IResponseCommand
     {
-        private readonly string _response;
+        private ObservableCollection<GroupChat> _groupChats;
 
-        public LoadAvailableGroupChatsCommand(string response)
+        public LoadAvailableGroupChatsCommand(ObservableCollection<GroupChat> groupChats)
         {
-            _response = response;
+            _groupChats = groupChats;
         }
 
-        public void Execute(ObservableCollection<InterfaceExample> example)
+        public void Execute(string response)
         {
-            List<InterfaceExample> interfaceList = new List<InterfaceExample>(example);
-            List<GroupChat> groupChatList = interfaceList.OfType<GroupChat>().ToList();
-            ObservableCollection<GroupChat> observableGroupChatList = new ObservableCollection<GroupChat>(groupChatList);
-
-            string[] availableChatsNames = _response.Split('#');
+            string[] availableChatsNames = response.Split('#');
             for (int i = 1; i < availableChatsNames.Length; i++)
             {
                 string availableChatName = availableChatsNames[i];
                 if (!string.IsNullOrEmpty(availableChatName) &&
-                    observableGroupChatList.All(chat => chat.GroupName != availableChatName))
+                    _groupChats.All(chat => chat.GroupName != availableChatName))
                 {
-                    observableGroupChatList.Add(new GroupChat(availableChatName));
+                    _groupChats.Add(new GroupChat(availableChatName));
                 }
             }
-            //example = observableGroupChatList;
         }
     }
-
 }

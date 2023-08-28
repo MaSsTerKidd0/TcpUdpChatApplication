@@ -1,6 +1,6 @@
 ﻿namespace ChatApp.Models
 {
-    public class GroupChat : InterfaceExample
+    public class GroupChat
     {
         private string _chatName;
 

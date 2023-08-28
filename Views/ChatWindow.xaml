@@ -144,7 +144,7 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-                            <ListView Background="LightGreen" Height="350" ItemsSource="{Binding Messages}" ItemContainerStyle="{StaticResource ListViewItemStyle}">
+                            <ListView x:Name="ChatMessagesView" Background="LightGreen" Height="350" ItemsSource="{Binding Messages}" ItemContainerStyle="{StaticResource ListViewItemStyle}">
                             </ListView>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">

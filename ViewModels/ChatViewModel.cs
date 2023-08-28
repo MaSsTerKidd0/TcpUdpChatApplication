@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
@@ -18,7 +19,7 @@ namespace ChatApp.ViewModels
         private ObservableCollection<string> _availableClients;
         ObservableCollection<Message> _messages;
         private string _selectedAvailableChat;
-        public static Dictionary<int, Action<string>> ResponseDictionary = new Dictionary<int, Action<string>>();
+        public static Dictionary<int, IResponseCommand> ResponseCommandDictionary = new Dictionary<int, IResponseCommand>();
         private string msgToSend;
         private string _newGroupChatName;
         private GroupChat _selectedGroupChat;
@@ -41,7 +42,6 @@ namespace ChatApp.ViewModels
             get { return _selectedAvailableChat; }
             set { SetProperty(ref _selectedAvailableChat, value); }
         }
-
         public string MessageToSend
         {
             get { return msgToSend; }
@@ -75,7 +75,7 @@ namespace ChatApp.ViewModels
         {
             initVariables();
             initCommands();
-            initResponseDictionary();
+            initResponsesCommands();
         }
 
         private void initVariables()
@@ -93,12 +93,12 @@ namespace ChatApp.ViewModels
             AvailableGroupChats = new ObservableCollection<GroupChat>();
         }
 
-        private void initResponseDictionary()
+        private void initResponsesCommands()
         {
-            ResponseDictionary.Add((int)ResponsesEnum.LoadAvailableChats, LoadAvailableChats);
-            ResponseDictionary.Add((int)ResponsesEnum.MessageReceived, MessageReceived);
-            ResponseDictionary.Add((int)ResponsesEnum.LoadJoinedGroupChat, LoadJoinedGroupChat);
-            ResponseDictionary.Add((int)ResponsesEnum.LoadAvailableGroupChats, LoadAvailableGroupChats);
+            ResponseCommandDictionary.Add((int)ResponsesEnum.LoadAvailableChats, new LoadAvaiableChatsCommand(AvailableChats));
+            ResponseCommandDictionary.Add((int)ResponsesEnum.MessageReceived, new MessageReceivedCommand(Messages));
+            ResponseCommandDictionary.Add((int)ResponsesEnum.LoadJoinedGroupChat, new LoadJoinedGroupChatsCommand(AvailableChats));
+            ResponseCommandDictionary.Add((int)ResponsesEnum.LoadAvailableGroupChats, new LoadAvailableGroupChatsCommand(AvailableGroupChats));
         }
         #endregion
 
@@ -106,133 +106,38 @@ namespace ChatApp.ViewModels
         {
             int responseType;
             int.TryParse(response.Split('#')[0], out responseType);
-
-            if (ResponseDictionary.ContainsKey(responseType))
+            if (ResponseCommandDictionary.ContainsKey(responseType))
             {
-
-               ResponseDictionary[responseType](response);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ResponseCommandDictionary[responseType].Execute(response);
+                });
             }
         }
-
-        //public static void SetAvailableGroupChats() 
-        //{
-        //    AvailableGroupChats = _availableGroupChats;
-        //}
-        private void LoadAvailableGroupChats(string response)
-        {
-            ICommand loadChat;
-            loadChat = new LoadAvailableGroupChatsCommand(response);
-            loadChat.Execute(new ObservableCollection<InterfaceExample>(AvailableGroupChats));
-            string[] AvailablesChatsNames = response.Split('#');
-            //for (int i = 1; i < AvailablesChatsNames.Length; i++)
-            //{
-            //    string availableChatName = AvailablesChatsNames[i];
-            //    if (!string.IsNullOrEmpty(availableChatName) &&
-            //        AvailableGroupChats.All(chat => chat.GroupName != availableChatName))
-            //    {
-            //        Application.Current.Dispatcher.Invoke(() =>
-            //            AvailableGroupChats.Add(new GroupChat(availableChatName)));
-            //    }
-            //}
-        }
-
         private void SendMessage()
         {
             ClientInfo.Instance.Client.SendMessageRequest(SelectedAvailableChat, MessageToSend);
         }
-        private void LoadAvailableChats(string serverResponse)
-        {
-            string[] connectedAccountsNames = serverResponse.Split('#');
-            for (int i = 1; i < connectedAccountsNames.Length && (connectedAccountsNames.Length - 1) != AvailableChats.Count; i++)
-            {
-                if (ClientInfo.Instance.UserName != connectedAccountsNames[i] && !AvailableChats.Contains(connectedAccountsNames[i]))
-                {
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        AvailableChats.Add(connectedAccountsNames[i]);
-                    });
-                }
-            }
-        }
-        private void MessageReceived(string serverResponse)
-        {
-            string[] responseParts = serverResponse.Split('#');
-            string from = responseParts[1];
-            string to = responseParts[2];
-            string message = responseParts[3];
-            string dateTimeString = responseParts[4].ToString();
-
-            CreateChat(from);
-            CreateChat(to);
-
-            Message newMessage = new Message
-            {
-                Sender = from == ClientInfo.Instance.UserName ? "Me" : from,
-                MessageText = message,
-                Background = (from == ClientInfo.Instance.UserName ? Colors.LightBlue.ToString() : Colors.LightGray.ToString()),
-                TextColor = (from == ClientInfo.Instance.UserName ? Colors.Crimson.ToString() : Colors.Black.ToString()),
-                Time = dateTimeString
-            };
-
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                ClientInfo.Instance.ClientChats[from].Messages.Add(newMessage);
-                ClientInfo.Instance.ClientChats[to].Messages.Add(newMessage);
-                Messages = new ObservableCollection<Message>(OrderMessagesByTime(to, from));
-                ReLoadChat();
-            });
-        }
-
-        public List<Message> OrderMessagesByTime(string to, string from)
-        {
-            List<Message> allMessages = new List<Message>();
-            DateTime time;
-            allMessages.ToList().AddRange(ClientInfo.Instance.ClientChats[from].Messages);
-            allMessages.ToList().AddRange(ClientInfo.Instance.ClientChats[to].Messages);
-
-            List<Message> orderedMessages = allMessages.OrderBy(message => DateTime.TryParse(message.Time, out time) ? time : DateTime.MinValue).ToList();
-
-            return orderedMessages;
-        }
-
-        public void LoadJoinedGroupChat(string response)
-        {
-            string[] chatsNames = response.Split('#');
-
-            for (int i = 1; i < chatsNames.Length && (chatsNames.Length - 1) != AvailableChats.Count; i++)
-            {
-                if (!(AvailableChats.Contains(chatsNames[i])))
-                {
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        AvailableChats.Add(chatsNames[i]);
-                    });
-                }
-            }
-        }
 
         private void ReLoadChat()
         {
-
-            if (SelectedAvailableChat != null && ClientInfo.Instance.ClientChats.ContainsKey(SelectedAvailableChat))
+            Application.Current?.Dispatcher.Invoke(() =>
             {
-                Messages = ClientInfo.Instance.ClientChats[SelectedAvailableChat].Messages;
-            }
-
+                if (SelectedAvailableChat != null && ClientInfo.Instance.ClientChats.ContainsKey(SelectedAvailableChat))
+                {
+                    Messages = ClientInfo.Instance.ClientChats[SelectedAvailableChat].Messages;
+                }
+                if (SelectedAvailableChat != null && !ClientInfo.Instance.ClientChats.ContainsKey(SelectedAvailableChat))
+                {
+                    Messages = null;
+                }
+            });
         }
 
-        private void CreateChat(string clientName)
-        {
-            if (!ClientInfo.Instance.ClientChats.ContainsKey(clientName))
-            {
-                ClientInfo.Instance.ClientChats.Add(clientName, new Chat());
-            }
-        }
-        public void CreateGroupChat()
+        public  void CreateGroupChat()
         {
             ClientInfo.Instance.Client.SendCreateGroupRequest(NewGroupChatName);
         }
-
         private void JoinGroupChat()
         {
             ClientInfo.Instance.Client.SendJoinGroupRequest(SelectedGroupChat.GroupName);

@@ -11,6 +11,7 @@ namespace ChatApp.Models
 {
     public abstract class Client
     {
+        #region Fields
         protected Socket _sender;
         protected int _port;
         protected IPAddress _ipAddress;
@@ -27,6 +28,7 @@ namespace ChatApp.Models
             { "JoinGroupChat", "201#" },
             { EXIT, "300#"}
         };
+        #endregion
 
         public Client()
         {
@@ -53,7 +55,6 @@ namespace ChatApp.Models
                 MessageBox.Show("Unexpected exception : {0}", e.ToString());
             }
         }
-
         protected virtual void ExecuteClient()
         {
             Send(reqTypes["Register"] + ClientInfo.Instance.UserName);
